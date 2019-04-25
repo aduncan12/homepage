@@ -1,14 +1,34 @@
 
+// MUNI API
 const routes = 'http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni'
+const stops = 'http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni'
 // const predictions = `http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r="${tagSplit}"&s="${}"&useShortTitles=true`
 
+
+// Weather API
+// const weather = 'https://api.weather.gov/gridpoints/mtr/37.777888,-122.436825';
+const weather = 'https://api.weather.gov/gridpoints/MTR/87,126/';
+
 getBusses();
+getStops();
+getWeather();
+
+
 
 function getBusses() {
     $.ajax({
         method: "GET",
         url: routes,
         success: displayRoutes,
+        error: handleError
+    })
+}
+
+function getStops() {
+    $.ajax({
+        method: "GET",
+        url: stops,
+        success: getStopIds,
         error: handleError
     })
 }
@@ -27,8 +47,6 @@ function displayRoutes(res) {
     let xmlRoutes = res.getElementsByTagName("route");
 
     globalRoutes.push(xmlRoutes);
-    console.log(globalRoutes)
-
 
     for (i=0; i < xmlRoutes.length; i++) {
         let routeList = [];
@@ -83,41 +101,64 @@ function getStopIds(res) {
     stopsArr.push(xmlStops);
     console.log(stopsArr)
 
-    // for (i=0; i < xmlRoutes.length; i++) {
-    //     let stopList = [];
-    //     stopList += xmlRoutes[i].getAttribute("stopId");
+    for (i=0; i < xmlStops.length; i++) {
+        let stopList = [];
+        stopList += xmlStops[i].getAttribute("stopId");
 
-    //     stopsArr.push(stopList)
-    //     console.log(stopList)
-    // }
+        stopsArr.push(stopList)
+    }
 }
 
-function getStopIds(res) {
-    console.log(res)
-    let xmlStops = res.getElementsByTagName("stop")
-
-    stopsArr.push(xmlStops);
-    console.log(stopsArr)
-
-    // for (i=0; i < xmlRoutes.length; i++) {
-    //     let stopList = [];
-    //     stopList += xmlRoutes[i].getAttribute("stopId");
-
-    //     stopsArr.push(stopList)
-    //     console.log(stopList)
-    // }
-}
-
-// console.log(routesArr)
-// console.log(tagsArr)
 
 // THIS WILL DISPLAY AN INDIVIDUAL ROUTE MAP UPON ROUTE SELECT FROM LIST
 // function displayMap() {
 
 // }
 
+// let date = new Date();
+// let hour = date.getHours();
+// console.log(hour)
+
+function getWeather() {
+    $.ajax({
+        method: "GET",
+        url: weather,
+        success: displayWeather,
+        error: handleError
+    })
+}
+
+function displayWeather(res) {
+    console.log(res)
+    let forecast = res.properties.temperature.values
+
+    console.log(forecast)
+
+    let date = new Date();
+    let hour = date.getHours();
+    let minutes = date.getMinutes();
+
+    console.log(hour + ':' + (minutes<10?'0':'') + minutes);
+
+    for (i=0; i < forecast.length; i++) {
+        let temperature = [];
+        let forecastTime = [];
+        temperature += forecast[i].value;
+        forecastTime += forecast[i].validTime;
+
+        // if(forecastTime > hour) {
+        //     console.log(forecastTime)
+        // }
+
+        // console.log(temperature)
+
+    }
+}
+
 function handleError(e1, e2, e3) {
     console.log(e1);
     console.log(e2);
     console.log(e3);
 }
+
+
