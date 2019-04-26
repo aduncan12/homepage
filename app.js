@@ -6,18 +6,18 @@ const stops = 'http://webservices.nextbus.com/service/publicXMLFeed?command=rout
 
 
 // Weather API
-// const weather = 'https://api.weather.gov/gridpoints/mtr/87,126';
 const weather = 'https://api.weather.gov/gridpoints/MTR/87,126/forecast';
 
 getDay();
+getTime();
 getWeather();
 getBusses();
 getStops();
 
+
 function getDay() {
     let dateAll = new Date();
     let date = dateAll.getDate();
-    let hour = dateAll.getHours();
     let year = dateAll.getFullYear();
 
     let day = new Array(7);
@@ -45,29 +45,35 @@ function getDay() {
         month[11] = "December";
     let monthName = month[dateAll.getMonth()];
 
+    $('#day').append(weekday)
+    $('#month').append(monthName)
+    $('#date').append(date)
+    $('#year').append(year)
+}
+
+function getTime() {
+    let dateAll = new Date();
+    let hour = dateAll.getHours();
+
     if (hour > 12) {
         let minutes = dateAll.getMinutes();
-        let fullTime = hour-12 + ':' + (minutes < 10 ? '0':'') + minutes + 'pm';
+        let seconds = dateAll.getSeconds();
+        let fullTime = hour-12 + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'pm';
+        $('#time').empty(fullTime)
         $('#time').append(fullTime)
-        $('#day').append(weekday)
-        $('#month').append(monthName)
-        $('#date').append(date)
-        $('#year').append(year)
+    } if (hour == 0) {
+        let minutes = dateAll.getMinutes();
+        let seconds = dateAll.getSeconds();
+        let fullTime = hour+12 + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'am';
+        $('#time').empty(fullTime)
+        $('#time').append(fullTime)
     } else {
         let minutes = dateAll.getMinutes();
-        let fullTime = hour + ':' + (minutes < 10 ? '0':'') + minutes + 'am';
+        let seconds = dateAll.getSeconds();
+        let fullTime = hour + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'am';
+        $('#time').empty(fullTime)
         $('#time').append(fullTime)
-        $('#day').append(weekday)
-        $('#month').append(monthName)
-        $('#date').append(date)
-        $('#year').append(year)
     }
-    function refresh() {
-        setTimeout(function () {
-            location.reload()
-        }, 30000);
-    }
-    refresh();
 }
 
 function getWeather() {
@@ -82,7 +88,6 @@ function getWeather() {
 function displayWeather(res) {
     let forecast = res.properties.periods
     console.log(forecast)
-
 
     $('#weatherName0').append(forecast[0].name)
     $('#weatherName1').append(forecast[1].name)

@@ -14,12 +14,10 @@
 
     <title>My Bus Routes</title>
 </head>
-<body>
+<body onload="getTime(); setInterval('getTime()', 1000 )">
+
     <h1 class="timeAll">The current time is <span id="time"></span> on <span id="day"></span>, <span id="month"></span> <span id="date"></span>, <span id="year"></span></h1>
-    <!-- <h1 class="timeAll">The current time is <iframe src="http://free.timeanddate.com/clock/i6qhop7h/n224" frameborder="0" width="114" height="18"></iframe> on <span id="day"></span>, <span id="month"></span> <span id="date"></span>, <span id="year"></span></h1> -->
-
     
-
     <h1>Weather</h1>
         <h2 id="weather0"><span id="weatherName0"></span>: </h2>
         <h3 id="weather1"><span id="weatherName1"></span>: </h3>
