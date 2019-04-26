@@ -62,6 +62,12 @@ function getDay() {
         $('#date').append(date)
         $('#year').append(year)
     }
+    function refresh() {
+        setTimeout(function () {
+            location.reload()
+        }, 30000);
+    }
+    refresh();
 }
 
 function getWeather() {
@@ -75,11 +81,15 @@ function getWeather() {
 
 function displayWeather(res) {
     let forecast = res.properties.periods
+    console.log(forecast)
 
-    $('#weatherToday').append(forecast[0].detailedForecast);
-    $('#weatherTonight').append(forecast[1].detailedForecast);
-    $('#weatherTomorrow').append(forecast[2].detailedForecast);
 
+    $('#weatherName0').append(forecast[0].name)
+    $('#weatherName1').append(forecast[1].name)
+    $('#weatherName2').append(forecast[2].name)
+    $('#weather0').append(forecast[0].detailedForecast);
+    $('#weather1').append(forecast[1].detailedForecast);
+    $('#weather2').append(forecast[2].detailedForecast);
 
     // for (i=0; i < forecast.length; i++) {
     //     let weeklyForecast = [];
