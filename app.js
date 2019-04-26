@@ -6,14 +6,90 @@ const stops = 'http://webservices.nextbus.com/service/publicXMLFeed?command=rout
 
 
 // Weather API
-// const weather = 'https://api.weather.gov/gridpoints/mtr/37.777888,-122.436825';
-const weather = 'https://api.weather.gov/gridpoints/MTR/87,126/';
+// const weather = 'https://api.weather.gov/gridpoints/mtr/87,126';
+const weather = 'https://api.weather.gov/gridpoints/MTR/87,126/forecast';
 
+getDay();
+getWeather();
 getBusses();
 getStops();
-getWeather();
+
+function getDay() {
+    let dateAll = new Date();
+    let date = dateAll.getDate();
+    let hour = dateAll.getHours();
+    let year = dateAll.getFullYear();
+
+    let day = new Array(7);
+        day[0] = "Sunday";
+        day[1] = "Monday";
+        day[2] = "Tuesday";
+        day[3] = "Wednesday";
+        day[4] = "Thursday";
+        day[5] = "Friday";
+        day[6] = "Saturday";
+    let weekday = day[dateAll.getDay()];
+
+    let month = new Array(12);
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+    let monthName = month[dateAll.getMonth()];
+
+    if (hour > 12) {
+        let minutes = dateAll.getMinutes();
+        let fullTime = hour-12 + ':' + (minutes < 10 ? '0':'') + minutes + 'pm';
+        $('#time').append(fullTime)
+        $('#day').append(weekday)
+        $('#month').append(monthName)
+        $('#date').append(date)
+        $('#year').append(year)
+    } else {
+        let minutes = dateAll.getMinutes();
+        let fullTime = hour + ':' + (minutes < 10 ? '0':'') + minutes + 'am';
+        $('#time').append(fullTime)
+        $('#day').append(weekday)
+        $('#month').append(monthName)
+        $('#date').append(date)
+        $('#year').append(year)
+    }
+}
+
+function getWeather() {
+    $.ajax({
+        method: "GET",
+        url: weather,
+        success: displayWeather,
+        error: handleError
+    })
+}
+
+function displayWeather(res) {
+    let forecast = res.properties.periods
+
+    $('#weatherToday').append(forecast[0].detailedForecast);
+    $('#weatherTonight').append(forecast[1].detailedForecast);
+    $('#weatherTomorrow').append(forecast[2].detailedForecast);
 
 
+    // for (i=0; i < forecast.length; i++) {
+    //     let weeklyForecast = [];
+    //     weeklyForecast += forecast[i].detailedForecast;
+
+    //     $('#weatherToday').append(weeklyForecast[0]);
+    //     $('#weatherTonight').append(weeklyForecast[1])
+    //     console.log(weeklyForecast)
+    // }
+}
 
 function getBusses() {
     $.ajax({
@@ -114,46 +190,6 @@ function getStopIds(res) {
 // function displayMap() {
 
 // }
-
-// let date = new Date();
-// let hour = date.getHours();
-// console.log(hour)
-
-function getWeather() {
-    $.ajax({
-        method: "GET",
-        url: weather,
-        success: displayWeather,
-        error: handleError
-    })
-}
-
-function displayWeather(res) {
-    console.log(res)
-    let forecast = res.properties.temperature.values
-
-    console.log(forecast)
-
-    let date = new Date();
-    let hour = date.getHours();
-    let minutes = date.getMinutes();
-
-    console.log(hour + ':' + (minutes<10?'0':'') + minutes);
-
-    for (i=0; i < forecast.length; i++) {
-        let temperature = [];
-        let forecastTime = [];
-        temperature += forecast[i].value;
-        forecastTime += forecast[i].validTime;
-
-        // if(forecastTime > hour) {
-        //     console.log(forecastTime)
-        // }
-
-        // console.log(temperature)
-
-    }
-}
 
 function handleError(e1, e2, e3) {
     console.log(e1);
