@@ -4,22 +4,36 @@ const routes = 'http://webservices.nextbus.com/service/publicXMLFeed?command=rou
 const stops = 'http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni'
 // const predictions = `http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r="${tagSplit}"&s="${}"&useShortTitles=true`
 
-
 // Weather API
 const weather = 'https://api.weather.gov/gridpoints/MTR/87,126/forecast';
 
-getDay();
-getTime();
+// getTime();
 getWeather();
 getBusses();
 getStops();
 
-
-function getDay() {
+function getTime() {
     let dateAll = new Date();
+    let hour = dateAll.getHours();
+    let minutes = dateAll.getMinutes();
+    let seconds = dateAll.getSeconds();
     let date = dateAll.getDate();
     let year = dateAll.getFullYear();
 
+    if (hour > 12) {
+        let fullTime = hour-12 + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'pm';
+        $('#time').empty(fullTime)
+        $('#time').append(fullTime)
+    } else if (hour == 0) {
+        let fullTime = hour+12 + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'am';
+        $('#time').empty(fullTime)
+        $('#time').append(fullTime)
+    } else {
+        let fullTime = hour + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'am';
+        $('#time').empty(fullTime)
+        $('#time').append(fullTime)
+    }
+    
     let day = new Array(7);
         day[0] = "Sunday";
         day[1] = "Monday";
@@ -45,35 +59,17 @@ function getDay() {
         month[11] = "December";
     let monthName = month[dateAll.getMonth()];
 
+    $('#day').empty(weekday)
     $('#day').append(weekday)
+
+    $('#month').empty(monthName)
     $('#month').append(monthName)
+
+    $('#date').empty(date)
     $('#date').append(date)
+
+    $('#year').empty(year)
     $('#year').append(year)
-}
-
-function getTime() {
-    let dateAll = new Date();
-    let hour = dateAll.getHours();
-
-    if (hour > 12) {
-        let minutes = dateAll.getMinutes();
-        let seconds = dateAll.getSeconds();
-        let fullTime = hour-12 + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'pm';
-        $('#time').empty(fullTime)
-        $('#time').append(fullTime)
-    } if (hour == 0) {
-        let minutes = dateAll.getMinutes();
-        let seconds = dateAll.getSeconds();
-        let fullTime = hour+12 + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'am';
-        $('#time').empty(fullTime)
-        $('#time').append(fullTime)
-    } else {
-        let minutes = dateAll.getMinutes();
-        let seconds = dateAll.getSeconds();
-        let fullTime = hour + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'am';
-        $('#time').empty(fullTime)
-        $('#time').append(fullTime)
-    }
 }
 
 function getWeather() {
