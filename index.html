@@ -12,16 +12,18 @@
 
     <script src="app.js" defer></script>
 
-    <title>My Bus Routes</title>
+    <title>My Info</title>
 </head>
-<body onload="getTime(); setInterval('getTime()', 1000 )">
+<body onload="getTime(); setInterval('getTime()', 1000 ); getWeather(); setInterval('getWeather()', 360000 )">
+        <h1 class="timeAll">The current time is <span id="time"></span> on <span id="day"></span>, <span id="month"></span> <span id="date"></span>, <span id="year"></span></h1>
 
-    <h1 class="timeAll">The current time is <span id="time"></span> on <span id="day"></span>, <span id="month"></span> <span id="date"></span>, <span id="year"></span></h1>
-    
-    <h1>Weather</h1>
-        <h2 id="weather0"><span id="weatherName0"></span>: </h2>
-        <h3 id="weather1"><span id="weatherName1"></span>: </h3>
-        <h3 id="weather2"><span id="weatherName2"></span>: </h3>
+        <div id="weather">
+        <h1>Weather</h1>
+            <h2 id="weather0"></h2>
+            <h3 id="weather1"></h3>
+            <h3 id="weather2"></h3>
+        </div>
+
 
     <h1>Popular Bus Routes</h1>
         <p class="routes"></p>

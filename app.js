@@ -2,13 +2,14 @@
 // MUNI API
 const routes = 'http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni'
 const stops = 'http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni'
-// const predictions = `http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r="${tagSplit}"&s="${}"&useShortTitles=true`
+const predictions = `http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r="N"&s="5205"&useShortTitles=true`
 
 // Weather API
 const weather = 'https://api.weather.gov/gridpoints/MTR/87,126/forecast';
 
+
 // getTime();
-getWeather();
+// getWeather();
 getBusses();
 getStops();
 
@@ -26,6 +27,10 @@ function getTime() {
         $('#time').append(fullTime)
     } else if (hour == 0) {
         let fullTime = hour+12 + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'am';
+        $('#time').empty(fullTime)
+        $('#time').append(fullTime)
+    } else if (hour == 12) {
+        let fullTime = hour + ':' + (minutes < 10 ? '0':'') + minutes + ':' + (seconds < 10 ? '0':'') + seconds + 'pm';
         $('#time').empty(fullTime)
         $('#time').append(fullTime)
     } else {
@@ -85,21 +90,12 @@ function displayWeather(res) {
     let forecast = res.properties.periods
     console.log(forecast)
 
-    $('#weatherName0').append(forecast[0].name)
-    $('#weatherName1').append(forecast[1].name)
-    $('#weatherName2').append(forecast[2].name)
-    $('#weather0').append(forecast[0].detailedForecast);
-    $('#weather1').append(forecast[1].detailedForecast);
-    $('#weather2').append(forecast[2].detailedForecast);
-
-    // for (i=0; i < forecast.length; i++) {
-    //     let weeklyForecast = [];
-    //     weeklyForecast += forecast[i].detailedForecast;
-
-    //     $('#weatherToday').append(weeklyForecast[0]);
-    //     $('#weatherTonight').append(weeklyForecast[1])
-    //     console.log(weeklyForecast)
-    // }
+    $('#weather0').empty();
+    $('#weather0').append(forecast[0].name + ": " + forecast[0].detailedForecast);
+    $('#weather1').empty();
+    $('#weather1').append(forecast[1].name + ": " + forecast[1].detailedForecast);
+    $('#weather2').empty();
+    $('#weather2').append(forecast[2].name + ": " + forecast[2].detailedForecast);
 }
 
 function getBusses() {
@@ -120,6 +116,19 @@ function getStops() {
     })
 }
 
+// function stopPredict() {
+//     $.ajax({
+//         method: "GET",
+//         url: predictions,
+//         success: getPredict,
+//         error: handleErrors
+//     })
+// }
+
+// function getPredict(res) {
+//     console.log(res)
+// }
+
 let globalRoutes = [];
 let globalTags = [];
 let stopsArr = [];
@@ -138,7 +147,6 @@ function displayRoutes(res) {
     for (i=0; i < xmlRoutes.length; i++) {
         let routeList = [];
         routeList += xmlRoutes[i].getAttribute("title");
-
         routesArr.push(routeList)
     }
 
@@ -166,8 +174,7 @@ function getRouteTag() {
 
     for(i=0; i < tags.length; i++) {
         let routeTag = [];
-        routeTag += tags[i].getAttribute("tag");
-        
+        routeTag += tags[i].getAttribute("tag");        
         tagsArr.push(routeTag)
     }
 
